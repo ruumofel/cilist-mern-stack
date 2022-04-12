@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-db
+  namespace: staging
+spec:
+  serviceName: mongo-stateful-service
+  replicas: 2
+  selector:
+    matchLabels:
+      role: mongo-db
+  template:
+    metadata:
+      labels:
+        role: mongo-db
+        # environment: test
+        replicaset: MainRepSet
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo-db
+          image: mongo:3.6.19-xenial
+          # imagePullPolicy: Always
+          command:
+            - "mongod"
+            - "--bind_ip"
+            - "0.0.0.0"
+            - "--replSet"
+            - "MainRepSet"
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+          ports:
+          - containerPort: 27017
+            # protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-persistent-storage
+      # volumes:
+      # - name: mongodb-persistent-storage
+      #   persistentVolumeClaim:
+      #     claimName: mongodb-pv-claim
+  volumeClaimTemplates:
+  - metadata:
+      name: mongo-persistent-storage
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "gp2"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db-service
+  namespace: staging
+  labels:
+    name: mongo-db
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-db
+    role: mongo-db
+  ports:
+  - port: 27017 
+    protocol: "TCP"

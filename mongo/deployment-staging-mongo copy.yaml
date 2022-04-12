@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-db
+  namespace: staging
+  labels:
+    app: mongo-db
+spec:
+  selector:
+    matchLabels:
+      app: mongo-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+    spec:
+      containers:
+      - name: mongo-db
+        image: mongo:3.6.19-xenial
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+      volumes:
+      - name: mongodb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongodb-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db-service
+  namespace: staging
+spec:
+  type: NodePort
+  selector:
+    app: mongo-db
+  ports:
+  - port: 27017 
+    protocol: "TCP"

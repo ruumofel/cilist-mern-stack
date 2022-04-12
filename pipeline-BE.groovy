@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                 checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'https://github.com/ruumofel/mern-be.git',
-                credentialsId: 'b6f18ac3-8d44-4255-8364-c2f00d199e74']], branches: [[name: "${branchname}" ]]],poll: true
+                credentialsId: 'GitHub']], branches: [[name: "${branchname}" ]]],poll: true
                 env.HASH = sh(script: "echo \$(git rev-parse --short HEAD)",returnStdout: true).trim()
                 env.VERSION = "${env.BUILD_NUMBER}-${branchname}-${env.HASH}"
                 }
@@ -26,7 +26,7 @@ pipeline {
         }
         stage("Docker login"){
             steps{
-            withCredentials([usernamePassword(credentialsId: '714cc6dd-1092-45d2-b2fe-a4d292c5951b', passwordVariable: 'password', usernameVariable: 'username')]) {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'password', usernameVariable: 'username')]) {
             sh "docker login -u ${username} -p ${password}"
                 }
             }

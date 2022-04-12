@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: stag-be.bewe.tech
+    - host: stag-be.sumateracommodity.com
       http:
         paths:
           - path: /
@@ -18,7 +18,7 @@ spec:
                 name: mern-be-service
                 port:
                   number: 4000
-    - host: stag-fe.bewe.tech
+    - host: stag-fe.sumateracommodity.com
       http:
         paths:
           - path: /
@@ -37,7 +37,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: be.bewe.tech
+    - host: be.sumateracommodity.com
       http:
         paths:
           - path: /
@@ -47,7 +47,7 @@ spec:
                 name: mern-be-service
                 port:
                   number: 4000
-    - host: fe.bewe.tech
+    - host: fe.sumateracommodity.com
       http:
         paths:
           - path: /
@@ -66,7 +66,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: monitoring.bewe.tech
+    - host: monitoring.sumateracommodity.com
       http:
         paths:
           - path: /
